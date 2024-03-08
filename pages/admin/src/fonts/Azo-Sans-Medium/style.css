@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Azo Sans';
+    src: local('Azo Sans Medium'), local('Azo-Sans-Medium'),
+        url('AzoSans-Medium.woff2') format('woff2'),
+        url('AzoSans-Medium.woff') format('woff'),
+        url('AzoSans-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+  }

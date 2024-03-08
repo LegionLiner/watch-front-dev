@@ -1,0 +1,69 @@
+stages:
+  - build
+  - package
+  - deploy
+
+image: docker:stable
+
+.build:
+  script:
+    - echo "Compiling the code..."
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS $REGISTRY_URL
+    - docker build -t $REGISTRY_URL/$REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA --build-arg "DOMAIN_ARG=${DOMAIN}" .
+    - docker push $REGISTRY_URL/$REGISTRY_IMAGE:$REGISTRY_TAG
+    - echo "Compile complete."
+
+
+.package:
+  script:
+    - echo "Package application..."
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS $REGISTRY_URL
+    - docker tag $REGISTRY_URL/$REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $REGISTRY_URL/$REGISTRY_IMAGE:latest
+    - docker push $REGISTRY_URL/$REGISTRY_IMAGE:latest
+    - echo "Application successfully package."
+
+
+.deploy:
+  script:
+    - echo "Deploying application..."
+    - docker service update --force --image $REGISTRY_URL/$REGISTRY_IMAGE:latest $SWARM_SERVICE
+    - echo "Application successfully deployed."
+
+
+build:
+  extends: .build
+  stage: build
+  variables:
+    REGISTRY_IMAGE: $CI_PROJECT_ROOT_NAMESPACE/$CI_COMMIT_BRANCH/front
+    REGISTRY_TAG: $CI_COMMIT_SHORT_SHA
+  tags:
+    - watchinvest
+  only:
+    - dev
+
+package:
+  extends: .package
+  stage: package
+  needs:
+    - build
+  variables:
+    REGISTRY_IMAGE: $CI_PROJECT_ROOT_NAMESPACE/$CI_COMMIT_BRANCH/front
+    REGISTRY_TAG: $CI_COMMIT_SHORT_SHA
+  tags:
+    - watchinvest
+  only:
+    - dev
+
+
+deploy:
+  extends: .deploy
+  stage: deploy
+  needs:
+    - package
+  variables:
+    REGISTRY_IMAGE: $CI_PROJECT_ROOT_NAMESPACE/$CI_COMMIT_BRANCH/front
+    SWARM_SERVICE: watchinvest_front
+  tags:
+    - watchinvest
+  only:
+    - dev

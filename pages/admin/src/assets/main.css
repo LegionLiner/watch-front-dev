@@ -1,0 +1,31 @@
+@import './../fonts/Azo-Sans-Regular/style.css';
+@import './../fonts/Azo-Sans-Medium/style.css';
+
+:root {
+    --black-100: #17171B;
+    --Primary-1: #BD9542;
+    --F4EEE1: #F4EEE1;
+    --F4E1E1: #F4E1E1;
+    --Gray-1: #181818;
+    --White: #fff;
+    --gray: #F0F0F0;
+    --Placeholder-text: #C2C2C2;
+    --gray-3: #F7F7F7;
+    --black-92: rgba(23, 23, 27, 0.88);
+    --f0: #F0F0F0;
+    --c9: #C9C9C9;
+    --Gray-text: #747476;
+    --red: #CB444A;
+    --Green: #57B660;
+    --purple: #EC31C3;
+    --purple2: #BF83FF;
+    --orange: #FF8934;
+    --blue: #3FA3FF;
+    --greentr: #E1F4E3;
+}
+
+
+body {
+    font-family: 'Azo Sans';
+    font-weight: 400;
+}
